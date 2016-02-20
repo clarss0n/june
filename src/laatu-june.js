@@ -416,7 +416,7 @@ june = {
     return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>');
   },
   // Generates unique id dependant on current datetime and genIdsCnt counter.
-  genId = function() {
+  genId: function() {
     var curDate = new Date();
     var curUnixTime = parseInt(curDate.getTime() / 1000);
     curUnixTime = curUnixTime.toString();
