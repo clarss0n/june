@@ -380,12 +380,12 @@ june = {
     if (typeof(obj) == 'string') {
       var obj = this.__obj(obj);
     }
-    // @todo Needs rewritting to pure JS.
+    // @todo This definately needs better implementation as offset* properties might not be reliable.
     return {
-      w: $(obj).width(),
-      h: $(obj).height(),
-      l: $(obj).position().left,
-      t: $(obj).position().top
+      w: obj.offsetWidth,
+      h: obj.offsetHeight,
+      l: obj.offsetLeft,
+      t: obj.offsetTop
     };
   },
   // To be used only in sensible places, eg. when object is created once for a lifetime.
