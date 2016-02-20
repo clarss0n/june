@@ -409,10 +409,10 @@ june = {
     tgt.appendChild(obj);
   },
   // Encoding and decoding '<' and '>' HTML chars.
-  encodeHtml: function(s) {
+  encHtml: function(s) {
     return s.replace('<', '&lt;').replace('>', '&gt');
   },
-  decodeHtml: function(s) {
+  decHtml: function(s) {
     return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>');
   },
   // Generates unique id dependant on current datetime and genIdsCnt counter.
