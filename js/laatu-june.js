@@ -1,3 +1,6 @@
+// by Nicholas Gasior. (C) LaatuGroup 2016.
+// June is a tiny library for handling some common JS stuff.
+
 function juneObj() {
   var o=[];
   this.setObj = function(a) {
@@ -361,23 +364,71 @@ function juneObj() {
   };
 }
 
-june = {};
-june.genIdsCnt = 0;
-june.el = function (id) {
-  var o = new juneObj;
-  if (document.getElementById(id)) {
-    o.setObj([document.getElementById(id)]);
+june = {
+  // Counter for uniquely generated ids.
+  genIdsCnt: 0,
+  // Getting the object and alternatively logging an error.
+  obj: function(id, errMsg) {
+    var o = document.getElementById(id);
+    if (o === null) {
+      console.log(errMsg);
+    }
+    return o;
+  },
+  // Getting object's width, height, top and left. The object is not a June object.
+  coords: function(obj) {
+    if (typeof(obj) == 'string') {
+      var obj = this.__obj(obj);
+    }
+    // @todo Needs rewritting to pure JS.
+    return {
+      w: $(obj).width(),
+      h: $(obj).height(),
+      l: $(obj).position().left,
+      t: $(obj).position().top
+    };
+  },
+  // To be used only in sensible places, eg. when object is created once for a lifetime.
+  newObj: function(type, properties) {
+    var o = document.createElement(type);
+    if (typeof(properties) == 'object') {
+      for (p in properties) {
+        if (typeof(properties[p]) == 'object') {
+          for (p2 in properties[p]) {
+            o[p][p2] = properties[p][p2];
+          }
+        } else {
+          o[p] = properties[p];
+        }
+      }
+    }
+    return o;
+  },
+  // Appending one object to another. Just a wrapper to appendChild.
+  appendObj: function(obj, tgt) {
+    tgt.appendChild(obj);
+  },
+  // Encoding and decoding '<' and '>' HTML chars.
+  encodeHtml: function(s) {
+    return s.replace('<', '&lt;').replace('>', '&gt');
+  },
+  decodeHtml: function(s) {
+    return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>');
+  },
+  // Generates unique id dependant on current datetime and genIdsCnt counter.
+  genId = function() {
+    var curDate = new Date();
+    var curUnixTime = parseInt(curDate.getTime() / 1000);
+    curUnixTime = curUnixTime.toString();
+    june.genIdsCnt++;
+    return 'gen_'+curUnixTime+'_'+(june.genIdsCnt-1);
+  },
+  // Getting June object.
+  get: function (id) {
+    var o = new juneObj;
+    if (document.getElementById(id)) {
+      o.setObj([document.getElementById(id)]);
+    }
+    return o;
   }
-  return o;
-};
-june.encodeHtml = function(s) {
-  return s.replace(/\</g,'&lt;').replace(/\>/g,'&gt;');
-};
-june.generateId = function() {
-  var curDate = new Date();
-  var curUnixTime = parseInt(curDate.getTime() / 1000);
-  curUnixTime = curUnixTime.toString();
-  june.genIdsCnt++;
-  return 'gen_'+curUnixTime+'_'+(june.genIdsCnt-1);
-};
-
+}
