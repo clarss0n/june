@@ -247,69 +247,64 @@ function juneObj() {
     }
   };
 
-  this._val = function(o, v) {
+  // Getting/setting value.
+  this._val = function(o,v) {
     if (typeof(v) == 'undefined')
       return this._valGet(o);
     else
       return this._valSet(o, v);
   };
-
-  this._valGet = function (el) {
-    var tagName = el.tagName.toLowerCase();
-    switch (tagName) {
-    case 'select':
-      return el.options[el.selectedIndex].value;
-      break;
-    case 'input':
-      var tagType = el.getAttribute('type');
-      if (tagType===null) {
-        tagType='text';
-      }
-      switch (tagType) {
-        case 'text':
-        case 'hidden':
-        case 'checkbox':
-        case 'radio':
-        return el.value;
+  this._valGet = function (o) {
+    var tag = o.tagName.toLowerCase();
+    switch (tag) {
+      case 'select': 
+        return o.options[o.selectedIndex].value;
+      case 'textarea':
+        return o.value;
+      case 'input':
+        var type = o.getAttribute('type');
+        if (type===null) {
+          type='text';
+        }
+        switch (type) {
+          case 'text':
+          case 'hidden':
+          case 'checkbox':
+          case 'radio':
+            return o.value;
+        }
         break;
-      }
-      break;
-    case 'textarea':
-      return el.value;
-      break;
     }
     return null;
   };
-
-  this._valSet = function (el,v) {
-    var tagName = el.tagName.toLowerCase();
-    switch (tagName) {
-    case 'select':
-      for (var i=0; i<el.options.length; i++) {
-        if (el.options[i].value == v) {
-          el.selectedIndex = i;
-          return this;
+  this._valSet = function (o,v) {
+    var tag = o.tagName.toLowerCase();
+    switch (tag) {
+      case 'select':
+        for (var i=0; i<o.options.length; i++) {
+          if (o.options[i].value == v) {
+            o.selectedIndex = i;
+            return this;
+          }
         }
-      }
-      break;
-    case 'input':
-      var tagType = el.getAttribute('type');
-      if (tagType===null) {
-        tagType='text';
-      }
-      switch (tagType) {
-        case 'text':
-        case 'hidden':
-        case 'checkbox':
-        case 'radio':
-          el.value=v;
+        break;
+      case 'input':
+        var type = o.getAttribute('type');
+        if (type===null) {
+          type='text';
+        }
+        switch (type) {
+          case 'text':
+          case 'hidden':
+          case 'checkbox':
+          case 'radio':
+            o.value=v;
+            return this;
+        }
+        break;
+      case 'textarea':
+        o.value=v;
         return this;
-      }
-      break;
-    case 'textarea':
-      el.value=v;
-      return this;
-      break;
     }
     return this;
   };
