@@ -1,13 +1,16 @@
 // by Nicholas Gasior. (C) LaatuGroup 2016.
 // June is a tiny library for handling some common JS stuff.
 
+// We will try to get the names short but sensible.
 function juneObj() {
   // Objects assigned.
   var o=[];
 
+  // Assigning object or array of objects.
   this.set = function(a) { o = a; return this; };
   this.get = function()  { return o;           };
 
+  // Adding/removing classes.
   this.remClass = function(r) {
     for (var oi=0; oi<o.length; oi++) {
       var re_w=/[\t\r\n\f]/g;
@@ -49,31 +52,29 @@ function juneObj() {
     return this;
   };
 
-  this.value = function(v) {
+  // Getting/setting the value.
+  this.val = function(v) {
     var out=[];
     for (var i=0; i<o.length; i++) {
       if (typeof v === 'undefined') {
-        out.push(this._getElementValue(o[i]));
+        out.push(this._val(o[i]));
       } else {
-        this._setElementValue(o[i],v);
+        this._val(o[i],v);
       }
     }
     if (typeof v === 'undefined') {
-      if (out.length==1) {
-        return out[0];
-      } else if (out.length==0) {
-        return null;
-      } else {
-        return out;
-      }
+      if      (out.length==1) { return out[0]; }
+      else if (out.length==0) { return null;   } 
+      else                    { return out;    }
     } else {
       return this;
     }
   };
+
   this.setCheckedIfValueMatches = function(v, c) {
     for (var i=0; i<o.length; i++) {
     if (this._canElementBeChecked(o[i])) {
-      if (this._getElementValue(o[i])==v) {
+      if (this._val(o[i])==v) {
         this._setElementChecked(o[i],(c?true:false));
       } else {
         this._setElementChecked(o[i],(c?false:true));
@@ -97,7 +98,7 @@ function juneObj() {
       if (this._canElementBeChecked(o[i])) {
         var fnd = false;
         for (var j = 0; j < valArr.length; j++) {
-          if (this._getElementValue(o[i]) == valArr[j]) {
+          if (this._val(o[i]) == valArr[j]) {
             fnd = true;
           }
         }
@@ -117,7 +118,7 @@ function juneObj() {
       if (this._canElementBeChecked(o[i])) {
         var ch=this._getElementChecked(o[i]);
         if ((ch && c)||(!ch && !c)) {
-          return this._getElementValue(o[i]);
+          return this._val(o[i]);
         }
       }
     }
@@ -135,7 +136,7 @@ function juneObj() {
       if (this._canElementBeChecked(o[i])) {
         var ch=this._getElementChecked(o[i]);
         if ((ch && c)||(!ch && !c)) {
-          out=out+(out!=''?s:'')+this._getElementValue(o[i]);
+          out=out+(out!=''?s:'')+this._val(o[i]);
         }
       }
     }
@@ -246,7 +247,14 @@ function juneObj() {
     }
   };
 
-  this._getElementValue = function (el) {
+  this._val = function(o, v) {
+    if (typeof(v) == 'undefined')
+      return this._valGet(o);
+    else
+      return this._valSet(o, v);
+  };
+
+  this._valGet = function (el) {
     var tagName = el.tagName.toLowerCase();
     switch (tagName) {
     case 'select':
@@ -273,7 +281,7 @@ function juneObj() {
     return null;
   };
 
-  this._setElementValue = function (el,v) {
+  this._valSet = function (el,v) {
     var tagName = el.tagName.toLowerCase();
     switch (tagName) {
     case 'select':

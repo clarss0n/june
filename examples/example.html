@@ -9,6 +9,7 @@
   <body>
     <div>Please check the source of this page to see more.</div>
     <div id="some-object"></div>
+    <div><input type="text" id="some-input" value="Old value"/></div>
   </body>
   <script src="../src/laatu-june.js"></script>
   <script>
@@ -19,7 +20,8 @@ document.body.onload = function() {
   someObj.remClass('class5');
   someObj.remClass('class1');
   someObj.style('border', 'solid 1px #ff0000');
-  someObj.html('Laatu June');
+  someObj.html('Laatu June and input had a value of "' + june.get('some-input').val() + '".');
+  june.get('some-input').val('New value');
 }
   </script>
 </html>
