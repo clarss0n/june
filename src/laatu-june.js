@@ -2,61 +2,53 @@
 // June is a tiny library for handling some common JS stuff.
 
 function juneObj() {
+  // Objects assigned.
   var o=[];
-  this.setObj = function(a) {
-    o = a;
-    return this;
-  };
-  this.getObj = function() {
-    return o;
-  };
-  this.removeClasses = function(a) {
+
+  this.set = function(a) { o = a; return this; };
+  this.get = function()  { return o;           };
+
+  this.remClass = function(r) {
     for (var oi=0; oi<o.length; oi++) {
-      var cl=o[oi].className;
-      if (cl!='') {
-        var cArr=cl.split(' ');
-        var cNew='';
-        for (var i=0; i<cArr.length; i++) {
-          var f=false;
-          for (var j=0; j<a.length; j++) {
-            if (cArr[i]==a[j]) {
-              f=true;
-            }
-          }
-          if (!f) {
-            cNew=cNew+(cNew!=''?' ':'')+cArr[i];
+      var re_w=/[\t\r\n\f]/g;
+      var c=o[oi].className;
+      c = c.replace(re_w, ' ');
+      if (c != '') {
+        var ca=c.split(' ');
+        var n='';
+        for (var ci=0; ci<ca.length; ci++) {
+          if (!ca[ci].match(/^[ ]*$/) && ca[ci]!=r) {
+            n+=(n!=''?' ':'')+ca[ci];
           }
         }
-      o[oi].className=cNew;
+        c=n;
       }
+      o[oi].className=c; 
     }
     return this;
   };
-  this.addClasses = function(a) {
-    for (var i=0; i<o.length; i++) {
-      var cl=o[i].className;
-      if (cl!='') {
-        var cArr=cl.split(' ');
+  this.addClass = function(a) {
+    for (var oi=0; oi<o.length; oi++) {
+      var re_w=/[\t\r\n\f]/g;
+      var c=o[oi].className;
+      c = c.replace(re_w, ' ');
+      if (c != '') {
+        var ca=c.split(' ');
+        var n='';
+        for (var ci=0; ci<ca.length; ci++) {
+          if (!ca[ci].match(/^[ ]*$/) && ca[ci]!=a) {
+            n+=(n!=''?' ':'')+ca[ci];
+          }
+        }
+        c=n+(n!=''?' ':'')+a;
       } else {
-        var cArr=null;
+        c=a;
       }
-      for (var j=0; j<a.length; j++) {
-        var f=false;
-        if (cArr!==null) {
-          for (var k=0; k<cArr.length; k++) {
-            if (cArr[k]==a[j]) {
-              f=true;
-            }
-          }
-        }
-        if (!f) {
-          cl=cl+(cl!=''?' ':'')+a[j];
-        }
-      }
-      o[i].className=cl;
+      o[oi].className=c; 
     }
     return this;
   };
+
   this.value = function(v) {
     var out=[];
     for (var i=0; i<o.length; i++) {
@@ -427,7 +419,7 @@ june = {
   get: function (id) {
     var o = new juneObj;
     if (document.getElementById(id)) {
-      o.setObj([document.getElementById(id)]);
+      o.set([document.getElementById(id)]);
     }
     return o;
   }

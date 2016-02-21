@@ -14,8 +14,10 @@
   <script>
 document.body.onload = function() {
   var someObj = june.get('some-object');
-  someObj.addClasses(['class1', 'class2']);
-  someObj.removeClasses(['class2']);
+  someObj.addClass('class1').addClass('class2').addClass('class3').addClass('class4').addClass('class5');
+  someObj.remClass('class2');
+  someObj.remClass('class5');
+  someObj.remClass('class1');
   someObj.style('border', 'solid 1px #ff0000');
   someObj.html('Laatu June');
 }
