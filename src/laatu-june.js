@@ -1,4 +1,4 @@
-// by Nicholas Gasior. (C) LaatuGroup 2016.
+// by Mikolaj Gasior <mikolaj at laatu dot uk>. (C) LaatuGroup 2016.
 // June is a tiny library for handling some common JS stuff.
 
 // We will try to get the names short but sensible.
