@@ -246,6 +246,15 @@ function juneObj() {
       o[i].parentNode.removeChild(o[i]);
     }
   };
+  this.parent = function() {
+    var newObjs = [];
+    for (var i=0; i<o.length; i++) {
+      newObjs.push(o[i].parentNode);
+    }
+    this.set(newObjs);
+    return this;
+  };
+
 
   // Getting/setting value.
   this._val = function(o,v) {
