@@ -254,7 +254,14 @@ function juneObj() {
     this.set(newObjs);
     return this;
   };
-
+  this.next = function() {
+    var newObjs = [];
+    for (var i=0; i<o.length; i++) {
+      newObjs.push(o[i].nextElementSibling);
+    }
+    this.set(newObjs);
+    return this;
+  }
 
   // Getting/setting value.
   this._val = function(o,v) {
