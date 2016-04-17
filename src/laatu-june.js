@@ -284,6 +284,7 @@ function juneObj() {
         }
         switch (type) {
           case 'text':
+          case 'password':
           case 'hidden':
           case 'checkbox':
           case 'radio':
@@ -311,6 +312,7 @@ function juneObj() {
         }
         switch (type) {
           case 'text':
+          case 'password':
           case 'hidden':
           case 'checkbox':
           case 'radio':
