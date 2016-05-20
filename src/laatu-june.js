@@ -52,6 +52,22 @@ var j_ = (function() {
         return this;
     };
 
+    // Coords.
+    var coords = function() {
+        var out=[];
+        for (var i=0; i<o.length; i++) {
+            out.push({
+                w: o.offsetWidth,
+                h: o.offsetHeight,
+                l: o.offsetLeft,
+                t: o.offsetTop
+            });
+        }
+        if (out.length==1)      { return out[0]; }
+        else if (out.length==0) { return null;   }
+        else                    { return out;    }
+    };
+
     // Getting/setting the value.
     var val = function(v) {
         var out=[];
@@ -414,20 +430,6 @@ var j_ = (function() {
             console.log(errMsg);
         }
         return o;
-    };
-
-    // Getting object's width, height, top and left. The object is not a June object.
-    var coords = function(obj) {
-        if (typeof(obj) == 'string') {
-            var obj = obj(obj);
-        }
-        // @todo This definately needs better implementation as offset* properties might not be reliable.
-        return {
-            w: obj.offsetWidth,
-            h: obj.offsetHeight,
-            l: obj.offsetLeft,
-            t: obj.offsetTop
-        };
     };
 
     // To be used only in sensible places, eg. when object is created once for a lifetime.
