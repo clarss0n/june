@@ -57,10 +57,10 @@ var j_ = (function() {
         var out=[];
         for (var i=0; i<o.length; i++) {
             out.push({
-                w: o.offsetWidth,
-                h: o.offsetHeight,
-                l: o.offsetLeft,
-                t: o.offsetTop
+                w: o[i].offsetWidth,
+                h: o[i].offsetHeight,
+                l: o[i].offsetLeft,
+                t: o[i].offsetTop
             });
         }
         if (out.length==1)      { return out[0]; }
