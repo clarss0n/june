@@ -2,16 +2,16 @@
 // June is a tiny library for handling some common JS stuff.
 
 // We will try to get the names short but sensible.
-function juneObj() {
+var j_ = (function() {
     // Objects assigned.
     var o=[];
 
     // Assigning object or array of objects.
-    this.set = function(a) { o = a; return this; };
-    this.get = function()  { return o;           };
+    var setObjs = function(a) { o = a; return j_; };
+    var getObjs = function()  { return o;         };
 
     // Adding/removing classes.
-    this.remClass = function(r) {
+    var remClass = function(r) {
         for (var oi=0; oi<o.length; oi++) {
             var re_w=/[\t\r\n\f]/g;
             var c=o[oi].className;
@@ -30,7 +30,7 @@ function juneObj() {
         }
         return this;
     };
-    this.addClass = function(a) {
+    var addClass = function(a) {
         for (var oi=0; oi<o.length; oi++) {
             var re_w=/[\t\r\n\f]/g;
             var c=o[oi].className;
@@ -53,13 +53,13 @@ function juneObj() {
     };
 
     // Getting/setting the value.
-    this.val = function(v) {
+    var val = function(v) {
         var out=[];
         for (var i=0; i<o.length; i++) {
             if (typeof v === 'undefined') {
-                out.push(this._val(o[i]));
+                out.push(_val(o[i]));
             } else {
-                this._val(o[i],v);
+                _val(o[i],v);
             }
         }
         if (typeof v === 'undefined') {
@@ -71,18 +71,20 @@ function juneObj() {
         }
     };
 
-    this.setCheckedIfValueMatches = function(v, c) {
+    var setCheckedIfValueMatches = function(v, c) {
         for (var i=0; i<o.length; i++) {
-        if (this._canElementBeChecked(o[i])) {
-            if (this._val(o[i])==v) {
-                this._setElementChecked(o[i],(c?true:false));
-            } else {
-                this._setElementChecked(o[i],(c?false:true));
+            if (_canElementBeChecked(o[i])) {
+                if (_val(o[i])==v) {
+                    _setElementChecked(o[i],(c?true:false));
+                } else {
+                    _setElementChecked(o[i],(c?false:true));
+                }
             }
         }
-        }
+        return this;
     };
-    this.setCheckedIfValuesMatches = function(v, c, s) {
+
+    var setCheckedIfValuesMatches = function(v, c, s) {
         if (typeof c === 'undefined') {
             c = true;
         }
@@ -95,36 +97,39 @@ function juneObj() {
             var valArr = [v];
         }
         for (var i=0; i<o.length; i++) {
-            if (this._canElementBeChecked(o[i])) {
+            if (_canElementBeChecked(o[i])) {
                 var fnd = false;
                 for (var j = 0; j < valArr.length; j++) {
-                    if (this._val(o[i]) == valArr[j]) {
+                    if (_val(o[i]) == valArr[j]) {
                         fnd = true;
                     }
                 }
                 if (fnd) {
-                    this._setElementChecked(o[i], (c?true:false));
+                    _setElementChecked(o[i], (c?true:false));
                 } else {
-                    this._setElementChecked(o[i], (c?false:true));
+                    _setElementChecked(o[i], (c?false:true));
                 }
             }
         }
+        return this;
     };
-    this.getValueIfChecked = function(c) {
+
+    var getValueIfChecked = function(c) {
         if (typeof c === 'undefined') {
             c = true;
         }
         for (var i=0; i<o.length; i++) {
-            if (this._canElementBeChecked(o[i])) {
-                var ch=this._getElementChecked(o[i]);
+            if (_canElementBeChecked(o[i])) {
+                var ch=_getElementChecked(o[i]);
                 if ((ch && c)||(!ch && !c)) {
-                    return this._val(o[i]);
+                    return _val(o[i]);
                 }
             }
         }
         return null;
     };
-    this.getValuesIfChecked = function(c, s) {
+
+    var getValuesIfChecked = function(c, s) {
         if (typeof c === 'undefined') {
             c = true;
         }
@@ -133,21 +138,22 @@ function juneObj() {
         }
         var out='';
         for (var i=0; i<o.length; i++) {
-            if (this._canElementBeChecked(o[i])) {
-                var ch=this._getElementChecked(o[i]);
+            if (_canElementBeChecked(o[i])) {
+                var ch=_getElementChecked(o[i]);
                 if ((ch && c)||(!ch && !c)) {
-                    out=out+(out!=''?s:'')+this._val(o[i]);
+                    out=out+(out!=''?s:'')+_val(o[i]);
                 }
             }
         }
         return out;
     };
-    this.checked = function(v) {
+
+    var checked = function(v) {
         if (typeof v === 'undefined') {
             var out=[];
             for (var i=0; i<o.length; i++) {
-                if (this._canElementBeChecked(o[i])) {
-                    out.push(this._getElementChecked(o[i]));
+                if (_canElementBeChecked(o[i])) {
+                    out.push(_getElementChecked(o[i]));
                 }
             }
             if (out.length==1) {
@@ -159,17 +165,19 @@ function juneObj() {
             }
         } else {
             for (var i=0; i<o.length; i++) {
-                if (this._canElementBeChecked(o[i])) {
-                    this._setElementChecked(o[i],(v?true:false));
+                if (_canElementBeChecked(o[i])) {
+                    _setElementChecked(o[i],(v?true:false));
                 }
             }
+            return this;
         }
     };
-    this.disabled = function(v) {
+
+    var disabled = function(v) {
         if (typeof v === 'undefined') {
             var out=[];
             for (var i=0; i<o.length; i++) {
-                out.push(this._getElementDisabled(o[i]));
+                out.push(_getElementDisabled(o[i]));
             }
             if (out.length==1) {
                 return out[0];
@@ -180,15 +188,17 @@ function juneObj() {
             }
         } else {
             for (var i=0; i<o.length; i++) {
-                this._setElementDisabled(o[i],(v?true:false));
+                _setElementDisabled(o[i],(v?true:false));
             }
+            return this;
         }
     };
-    this.attribute = function(a, v) {
+
+    var attribute = function(a, v) {
         if (typeof v === 'undefined') {
             var out=[];
             for (var i=0; i<o.length; i++) {
-                out.push(this._getElementAttribute(o[i], a));
+                out.push(_getElementAttribute(o[i], a));
             }
             if (out.length==1) {
                 return out[0];
@@ -199,15 +209,17 @@ function juneObj() {
             }
         } else {
             for (var i=0; i<o.length; i++) {
-                this._setElementAttribute(o[i], a, v);
+                _setElementAttribute(o[i], a, v);
             }
+            return this;
         }
     };
-    this.style = function(a, v) {
+
+    var style = function(a, v) {
         if (typeof v === 'undefined') {
             var out=[];
             for (var i=0; i<o.length; i++) {
-                out.push(this._getElementStyle(o[i], a));
+                out.push(_getElementStyle(o[i], a));
             }
             if (out.length==1) {
                 return out[0];
@@ -218,11 +230,13 @@ function juneObj() {
             }
         } else {
             for (var i=0; i<o.length; i++) {
-                this._setElementStyle(o[i], a, v);
+                _setElementStyle(o[i], a, v);
             }
+            return this;
         }
     };
-    this.html = function(v) {
+
+    var html = function(v) {
         if (typeof v === 'undefined') {
             var out=[];
             for (var i=0; i<o.length; i++) {
@@ -239,45 +253,50 @@ function juneObj() {
             for (var i=0; i<o.length; i++) {
                 o[i].innerHTML=v;
             }
+            return this;
         }
     };
-    this.remove = function() {
+
+    var remove = function() {
         for (var i=0; i<o.length; i++) {
             o[i].parentNode.removeChild(o[i]);
         }
     };
-    this.parent = function() {
+
+    var parent = function() {
         var newObjs = [];
         for (var i=0; i<o.length; i++) {
             newObjs.push(o[i].parentNode);
         }
-        this.set(newObjs);
+        this.setObjs(newObjs);
         return this;
     };
-    this.next = function() {
+
+    var next = function() {
         var newObjs = [];
         for (var i=0; i<o.length; i++) {
             newObjs.push(o[i].nextElementSibling);
         }
-        this.set(newObjs);
+        this.setObjs(newObjs);
         return this;
     };
 
     // Events.
-    this.on = function(n, f) {
+    var on = function(n, f) {
         for (var i=0; i<o.length; i++) {
             o[i].addEventListener('on'+n, f);
         }
+        return this;
     };
 
     // Getting/setting value.
-    this._val = function(o,v) {
+    var _val = function(o,v) {
         if (typeof(v) == 'undefined')
-            return this._valGet(o);
+            return _valGet(o);
         else
-            return this._valSet(o, v);
+            return _valSet(o, v);
     };
-    this._valGet = function (o) {
+    var _valGet = function (o) {
         var tag = o.tagName.toLowerCase();
         switch (tag) {
             case 'select': 
@@ -301,7 +320,8 @@ function juneObj() {
         }
         return null;
     };
-    this._valSet = function (o,v) {
+
+    var _valSet = function (o,v) {
         var tag = o.tagName.toLowerCase();
         switch (tag) {
             case 'select':
@@ -334,7 +354,7 @@ function juneObj() {
         return this;
     };
 
-    this._canElementBeChecked = function(el) {
+    var _canElementBeChecked = function(el) {
         var tagName = el.tagName.toLowerCase();
         var tagType = el.getAttribute('type');
         if (tagType===null) {
@@ -347,58 +367,59 @@ function juneObj() {
         }
     };
 
-    this._setElementChecked = function(el,v) {
+    var _setElementChecked = function(el,v) {
         el.checked=(v?true:false);
         return this;
     };
 
-    this._getElementChecked = function(el) {
+    var _getElementChecked = function(el) {
         return el.checked;
     };
 
-    this._setElementDisabled = function(el,v) {
+    var _setElementDisabled = function(el,v) {
         el.disabled=(v?true:false);
         return this;
     };
 
-    this._getElementDisabled = function(el) {
+    var _getElementDisabled = function(el) {
         return el.disabled;
     };
 
-    this._setElementAttribute = function(el,a,v) {
+    var _setElementAttribute = function(el,a,v) {
         el.setAttribute(a, v);
         return this;
     };
 
-    this._getElementAttribute = function(el,a) {
+    var _getElementAttribute = function(el,a) {
         return el.getAttribute(a);
     };
 
-    this._setElementStyle = function(el,a,v) {
+    var _setElementStyle = function(el,a,v) {
         el.style[a]=v;
         return this;
     };
 
-    this._getElementStyle = function(el,a) {
+    var _getElementStyle = function(el,a) {
         return el.style[a];
     };
-}
 
-june = {
+
     // Counter for uniquely generated ids.
-    genIdsCnt: 0,
+    var genIdsCnt = 0;
+
     // Getting the object and alternatively logging an error.
-    obj: function(id, errMsg) {
+    var obj = function(id, errMsg) {
         var o = document.getElementById(id);
         if (o === null) {
             console.log(errMsg);
         }
         return o;
-    },
+    };
+
     // Getting object's width, height, top and left. The object is not a June object.
-    coords: function(obj) {
+    var coords = function(obj) {
         if (typeof(obj) == 'string') {
-            var obj = this.__obj(obj);
+            var obj = obj(obj);
         }
         // @todo This definately needs better implementation as offset* properties might not be reliable.
         return {
@@ -407,9 +428,10 @@ june = {
             l: obj.offsetLeft,
             t: obj.offsetTop
         };
-    },
+    };
+
     // To be used only in sensible places, eg. when object is created once for a lifetime.
-    newObj: function(type, properties) {
+    var newObj = function(type, properties) {
         var o = document.createElement(type);
         if (typeof(properties) == 'object') {
             for (p in properties) {
@@ -423,45 +445,80 @@ june = {
             }
         }
         return o;
-    },
+    };
+
     // Appending one object to another. Just a wrapper to appendChild.
-    appendObj: function(obj, tgt) {
+    var appendObj = function(obj, tgt) {
         tgt.appendChild(obj);
-    },
+    };
+
     // Encoding and decoding '<' and '>' HTML chars.
-    encHtml: function(s) {
+    var encHtml = function(s) {
         return s.replace('<', '&lt;').replace('>', '&gt');
-    },
-    decHtml: function(s) {
+    };
+    var decHtml = function(s) {
         return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>');
-    },
+    };
+
     // Generates unique id dependant on current datetime and genIdsCnt counter.
-    genId: function() {
+    var genId = function() {
         var curDate = new Date();
         var curUnixTime = parseInt(curDate.getTime() / 1000);
         curUnixTime = curUnixTime.toString();
         june.genIdsCnt++;
         return 'gen_'+curUnixTime+'_'+(june.genIdsCnt-1);
-    },
-    // Getting June object.
-    get: function (i) {
-        var o = new juneObj;
+    };
+
+    // Getting object on which we are going do various action (eg. change styles).
+    var get = function (i) {
         if (typeof(i) == 'object') {
-            o.set([i]);
+            setObjs([i]);
         } else {
             if (document.getElementById(i)) {
-                o.set([document.getElementById(i)]);
+                setObjs([document.getElementById(i)]);
             }
         }
-        return o;
-    },
+        return this;
+    };
+
     // Run function on document load.
-    onDocLoad: function(f) {
+    var onDocLoad = function(f) {
         var r = setInterval(function() {
             if (document.readyState == 'complete') {
                 clearInterval(r);
                 f();
             }
         }, 10);
-    }
-}
+    };
+
+    return {
+        get                      : get,
+
+        remClass                 : remClass,
+        addClass                 : addClass,
+        val                      : val,
+        setCheckedIfValueMatches : setCheckedIfValueMatches,
+        setCheckedIfValuesMatches: setCheckedIfValuesMatches,
+        getValueIfChecked        : getValueIfChecked,
+        getValuesIfChecked       : getValuesIfChecked,
+        checked                  : checked,
+        disabled                 : disabled,
+        attribute                : attribute,
+        style                    : style,
+        html                     : html,
+        remove                   : remove,
+        parent                   : parent,
+        next                     : next,
+        on                       : on,
+        
+        genId                    : genId,
+        encHtml                  : encHtml,
+        decHtml                  : decHtml,
+        appendObj                : appendObj,
+        newObj                   : newObj,
+        coords                   : coords,
+        obj                      : obj,
+        onDocLoad                : onDocLoad,
+    };
+})();
+
