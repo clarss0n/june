@@ -524,7 +524,7 @@ var j_ = (function() {
         appendObj                   : appendObj,
         newObj                      : newObj,
         obj                         : obj,
-        onDocLoad                   : onDocLoad,
+        onDocLoad                   : onDocLoad
     };
 })();
 
