@@ -56,11 +56,15 @@ var j_ = (function() {
     var coords = function() {
         var out=[];
         for (var i=0; i<o.length; i++) {
+            var _height = "innerHeight" in o[i] ? o[i].innerHeight : o[i].offsetHeight;
+            var _width  = "innerWidth"  in o[i] ? o[i].innerWidth  : o[i].offsetWidth;
+            var _left   = o[i].offsetLeft;
+            var _top    = o[i].offsetTop;
             out.push({
-                w: o[i].offsetWidth,
-                h: o[i].offsetHeight,
-                l: o[i].offsetLeft,
-                t: o[i].offsetTop
+                w: _width,
+                h: _height,
+                l: _left,
+                t: _top
             });
         }
         if (out.length==1)      { return out[0]; }
@@ -494,33 +498,33 @@ var j_ = (function() {
     };
 
     return {
-        get                      : get,
+        get                         : get,
 
-        remClass                 : remClass,
-        addClass                 : addClass,
-        val                      : val,
-        setCheckedIfValueMatches : setCheckedIfValueMatches,
-        setCheckedIfValuesMatches: setCheckedIfValuesMatches,
-        getValueIfChecked        : getValueIfChecked,
-        getValuesIfChecked       : getValuesIfChecked,
-        checked                  : checked,
-        disabled                 : disabled,
-        attribute                : attribute,
-        style                    : style,
-        html                     : html,
-        remove                   : remove,
-        parent                   : parent,
-        next                     : next,
-        on                       : on,
+        remClass                    : remClass,
+        addClass                    : addClass,
+        coords                      : coords,
+        val                         : val,
+        setCheckedIfValueMatches    : setCheckedIfValueMatches,
+        setCheckedIfValuesMatches   : setCheckedIfValuesMatches,
+        getValueIfChecked           : getValueIfChecked,
+        getValuesIfChecked          : getValuesIfChecked,
+        checked                     : checked,
+        disabled                    : disabled,
+        attribute                   : attribute,
+        style                       : style,
+        html                        : html,
+        remove                      : remove,
+        parent                      : parent,
+        next                        : next,
+        on                          : on,
         
-        genId                    : genId,
-        encHtml                  : encHtml,
-        decHtml                  : decHtml,
-        appendObj                : appendObj,
-        newObj                   : newObj,
-        coords                   : coords,
-        obj                      : obj,
-        onDocLoad                : onDocLoad,
+        genId                       : genId,
+        encHtml                     : encHtml,
+        decHtml                     : decHtml,
+        appendObj                   : appendObj,
+        newObj                      : newObj,
+        obj                         : obj,
+        onDocLoad                   : onDocLoad,
     };
 })();
 
