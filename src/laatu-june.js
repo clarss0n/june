@@ -304,7 +304,7 @@ var j_ = (function() {
     // Events.
     var on = function(n, f) {
         for (var i=0; i<o.length; i++) {
-            o[i].addEventListener('on'+n, f);
+            o[i].addEventListener(n, f);
         }
         return this;
     };
