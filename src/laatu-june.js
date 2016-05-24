@@ -12,21 +12,15 @@ var june = (function() {
 
     // Getting object on which we are going do various actions (eg. change styles).
     var get = function (i) {
-        if (typeof(i) == 'object') {
-            setO([i]);
-        } else {
-            if (document.getElementById(i)) {
-                setO([document.getElementById(i)]);
-            }
-        }
+             if (typeof(i) == 'object')      { setO([i]);                          }
+        else if (document.getElementById(i)) { setO([document.getElementById(i)]); }
+
         return this;
     };
 
     // Events.
     var on = function(n, f) {
-        for (var i=0; i<o.length; i++) {
-            o[i].addEventListener(n, f);
-        }
+        for (var i=0; i<o.length; i++) { o[i].addEventListener(n, f); }
         return this;
     };
 
@@ -55,7 +49,7 @@ var june = (function() {
     var addClass    = function(r) { _removeClass(r, true); return this; };
 
     var _returnArray = function(out) {
-        if (out.length==1)      { return out[0]; }
+             if (out.length==1) { return out[0]; }
         else if (out.length==0) { return null;   }
         else                    { return out;    }
     };
@@ -68,12 +62,7 @@ var june = (function() {
             var _width  = "innerWidth"  in o[i] ? o[i].innerWidth  : o[i].offsetWidth;
             var _left   = o[i].offsetLeft;
             var _top    = o[i].offsetTop;
-            out.push({
-                w: _width,
-                h: _height,
-                l: _left,
-                t: _top
-            });
+            out.push({ w: _width, h: _height, l: _left, t: _top });
         }
         return _returnArray(out);
     };
@@ -82,32 +71,22 @@ var june = (function() {
     var value = function(v) {
         var out=[];
         for (var i=0; i<o.length; i++) {
-            if (typeof v === 'undefined') {
-                out.push(_val(o[i]));
-            } else {
-                _val(o[i],v);
-            }
+            if (typeof v === 'undefined') { out.push(_val(o[i])); } 
+            else                          { _val(o[i],v);         }
         }
-        if (typeof v === 'undefined') {
-            return _returnArray(out);
-        } else {
-            return this;
-        }
+        if (typeof v === 'undefined') { return _returnArray(out); } 
+        else                          { return this;              }
     };
 
     // Removing element.
     var remove = function() {
-        for (var i=0; i<o.length; i++) {
-            o[i].parentNode.removeChild(o[i]);
-        }
+        for (var i=0; i<o.length; i++) { o[i].parentNode.removeChild(o[i]); }
     };
 
     // Setting current object to parents of all objects.
     var parent = function() {
         var newObjs = [];
-        for (var i=0; i<o.length; i++) {
-            newObjs.push(o[i].parentNode);
-        }
+        for (var i=0; i<o.length; i++) { newObjs.push(o[i].parentNode);         }
         setO(newObjs);
         return this;
     };
@@ -115,9 +94,7 @@ var june = (function() {
     // Setting current object to next siblings of all objects.
     var next = function() {
         var newObjs = [];
-        for (var i=0; i<o.length; i++) {
-            newObjs.push(o[i].nextElementSibling);
-        }
+        for (var i=0; i<o.length; i++) { newObjs.push(o[i].nextElementSibling); }
         setO(newObjs);
         return this;
     };
@@ -126,14 +103,10 @@ var june = (function() {
     var html = function(v) {
         if (typeof v === 'undefined') {
             var out=[];
-            for (var i=0; i<o.length; i++) {
-                out.push(o[i].innerHTML);
-            }
+            for (var i=0; i<o.length; i++) { out.push(o[i].innerHTML); }
             return _returnArray(out);
         } else {
-            for (var i=0; i<o.length; i++) {
-                o[i].innerHTML=v;
-            }
+            for (var i=0; i<o.length; i++) { o[i].innerHTML=v;         }
             return this;
         }
     };
@@ -142,11 +115,7 @@ var june = (function() {
     var setCheckedIfValueMatches = function(v, c) {
         for (var i=0; i<o.length; i++) {
             if (_canElementBeChecked(o[i])) {
-                if (_val(o[i])==v) {
-                    _setElementChecked(o[i],(c?true:false));
-                } else {
-                    _setElementChecked(o[i],(c?false:true));
-                }
+                _setElementChecked(o[i], _val(o[i])==v ? (c?true:false) : (c?false:true));
             }
         }
         return this;
@@ -172,11 +141,7 @@ var june = (function() {
                         fnd = true;
                     }
                 }
-                if (fnd) {
-                    _setElementChecked(o[i], (c?true:false));
-                } else {
-                    _setElementChecked(o[i], (c?false:true));
-                }
+                _setElementChecked(o[i], fnd ? (c?true:false) : (c?false:true));
             }
         }
         return this;
@@ -189,9 +154,8 @@ var june = (function() {
         for (var i=0; i<o.length; i++) {
             if (_canElementBeChecked(o[i])) {
                 var ch=_getElementChecked(o[i]);
-                if ((ch && c)||(!ch && !c)) {
+                if ((ch && c)||(!ch && !c))
                     return _val(o[i]);
-                }
             }
         }
         return null;
@@ -270,23 +234,17 @@ var june = (function() {
 
     // Getting/setting value.
     var _val = function(o,v) {
-        if (typeof(v) == 'undefined')
-            return _valGet(o);
-        else
-            return _valSet(o, v);
+        if (typeof(v) == 'undefined') return _valGet(o);
+        else                          return _valSet(o, v);
     };
     var _valGet = function (o) {
         var tag = o.tagName.toLowerCase();
         switch (tag) {
-            case 'select': 
-                return o.options[o.selectedIndex].value;
-            case 'textarea':
-                return o.value;
+            case 'select':   return o.options[o.selectedIndex].value;
+            case 'textarea': return o.value;
             case 'input':
                 var type = o.getAttribute('type');
-                if (type===null) {
-                    type='text';
-                }
+                if (type===null) { type='text'; }
                 switch (type) {
                     case 'text':
                     case 'password':
@@ -313,9 +271,7 @@ var june = (function() {
                 break;
             case 'input':
                 var type = o.getAttribute('type');
-                if (type===null) {
-                    type='text';
-                }
+                if (type===null) { type='text'; }
                 switch (type) {
                     case 'text':
                     case 'password':
@@ -336,65 +292,29 @@ var june = (function() {
     var _canElementBeChecked = function(el) {
         var tagName = el.tagName.toLowerCase();
         var tagType = el.getAttribute('type');
-        if (tagType===null) {
-            tagType='text';
-        }
-        if (tagName=='input' && (tagType=='radio' || tagType=='checkbox')) {
-            return true;
-        } else {
-            return false;
-        }
+        if (tagType===null) { tagType='text'; }
+
+        if (tagName=='input' && (tagType=='radio' || tagType=='checkbox')) { return true;  }
+        else                                                               { return false; }
     };
 
-    var _setElementChecked = function(el,v) {
-        el.checked=(v?true:false);
-        return this;
-    };
-
-    var _getElementChecked = function(el) {
-        return el.checked;
-    };
-
-    var _setElementDisabled = function(el,v) {
-        el.disabled=(v?true:false);
-        return this;
-    };
-
-    var _getElementDisabled = function(el) {
-        return el.disabled;
-    };
-
-    var _setElementAttribute = function(el,a,v) {
-        el.setAttribute(a, v);
-        return this;
-    };
-
-    var _getElementAttribute = function(el,a) {
-        return el.getAttribute(a);
-    };
-
-    var _setElementStyle = function(el,a,v) {
-        el.style[a]=v;
-        return this;
-    };
-
-    var _getElementStyle = function(el,a) {
-        return el.style[a];
-    };
-
+    var _setElementChecked   = function(el,v)   { el.checked=(v?true:false);  return this;               };
+    var _getElementChecked   = function(el)     {                             return el.checked;         };
+    var _setElementDisabled  = function(el,v)   { el.disabled=(v?true:false); return this;               };
+    var _getElementDisabled  = function(el)     {                             return el.disabled;        };
+    var _setElementAttribute = function(el,a,v) { el.setAttribute(a, v);      return this;               };
+    var _getElementAttribute = function(el,a)   {                             return el.getAttribute(a); };
+    var _setElementStyle     = function(el,a,v) { el.style[a]=v;              return this;               };
+    var _getElementStyle     = function(el,a)   {                             return el.style[a];        };
 
     // Counter for uniquely generated ids.
     var genUidsCnt = 0;
 
     // Getting raw js object by id.
     var getRawObject = function(id) {
-        if (typeof(id) === 'string') {
-            var o = document.getElementById(id);
-            return o;
-        } else if (typeof(id) == 'undefined') {
-            return _returnArray(getO());
-        }
-        return null;
+             if (typeof(id) == 'string')    { return document.getElementById(id); } 
+        else if (typeof(id) == 'undefined') { return _returnArray(getO());        }
+        else                                { return null;                        }
     };
 
     // To be used only in sensible places, eg. when object is created once for a lifetime.
