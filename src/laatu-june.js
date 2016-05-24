@@ -2,16 +2,37 @@
 // June is a tiny library for handling some common JS stuff.
 
 // We will try to get the names short but sensible.
-var j_ = (function() {
+var june = (function() {
     // Objects assigned.
     var o=[];
 
     // Assigning object or array of objects.
-    var setObjs = function(a) { o = a; return j_; };
-    var getObjs = function()  { return o;         };
+    var setO = function(a) { o = a; return june; };
+    var getO = function()  { return o;           };
+
+    // Getting object on which we are going do various actions (eg. change styles).
+    var get = function (i) {
+        if (typeof(i) == 'object') {
+            setO([i]);
+        } else {
+            if (document.getElementById(i)) {
+                setO([document.getElementById(i)]);
+            }
+        }
+        return this;
+    };
+
+    // Events.
+    var on = function(n, f) {
+        for (var i=0; i<o.length; i++) {
+            o[i].addEventListener(n, f);
+        }
+        return this;
+    };
 
     // Adding/removing classes.
-    var remClass = function(r) {
+    // General function to handle both add and remove.
+    var _removeClass = function(cs, a) {
         for (var oi=0; oi<o.length; oi++) {
             var re_w=/[\t\r\n\f]/g;
             var c=o[oi].className;
@@ -20,40 +41,27 @@ var j_ = (function() {
                 var ca=c.split(' ');
                 var n='';
                 for (var ci=0; ci<ca.length; ci++) {
-                    if (!ca[ci].match(/^[ ]*$/) && ca[ci]!=r) {
+                    if (!ca[ci].match(/^[ ]*$/) && ca[ci]!=cs) {
                         n+=(n!=''?' ':'')+ca[ci];
                     }
                 }
-                c=n;
+                c=a?n+(n!=''?' ':'')+cs:n;
             }
-            o[oi].className=c; 
+            o[oi].className=c;
         }
-        return this;
-    };
-    var addClass = function(a) {
-        for (var oi=0; oi<o.length; oi++) {
-            var re_w=/[\t\r\n\f]/g;
-            var c=o[oi].className;
-            c = c.replace(re_w, ' ');
-            if (c != '') {
-                var ca=c.split(' ');
-                var n='';
-                for (var ci=0; ci<ca.length; ci++) {
-                    if (!ca[ci].match(/^[ ]*$/) && ca[ci]!=a) {
-                        n+=(n!=''?' ':'')+ca[ci];
-                    }
-                }
-                c=n+(n!=''?' ':'')+a;
-            } else {
-                c=a;
-            }
-            o[oi].className=c; 
-        }
-        return this;
     };
 
-    // Coords.
-    var coords = function() {
+    var removeClass = function(r) { _removeClass(r);       return this; };
+    var addClass    = function(r) { _removeClass(r, true); return this; };
+
+    var _returnArray = function(out) {
+        if (out.length==1)      { return out[0]; }
+        else if (out.length==0) { return null;   }
+        else                    { return out;    }
+    };
+
+    // Position of the element.
+    var position = function() {
         var out=[];
         for (var i=0; i<o.length; i++) {
             var _height = "innerHeight" in o[i] ? o[i].innerHeight : o[i].offsetHeight;
@@ -67,13 +75,11 @@ var j_ = (function() {
                 t: _top
             });
         }
-        if (out.length==1)      { return out[0]; }
-        else if (out.length==0) { return null;   }
-        else                    { return out;    }
+        return _returnArray(out);
     };
 
     // Getting/setting the value.
-    var val = function(v) {
+    var value = function(v) {
         var out=[];
         for (var i=0; i<o.length; i++) {
             if (typeof v === 'undefined') {
@@ -83,13 +89,55 @@ var j_ = (function() {
             }
         }
         if (typeof v === 'undefined') {
-            if      (out.length==1) { return out[0]; }
-            else if (out.length==0) { return null;   } 
-            else                    { return out;    }
+            return _returnArray(out);
         } else {
             return this;
         }
     };
+
+    // Removing element.
+    var remove = function() {
+        for (var i=0; i<o.length; i++) {
+            o[i].parentNode.removeChild(o[i]);
+        }
+    };
+
+    // Setting current object to parents of all objects.
+    var parent = function() {
+        var newObjs = [];
+        for (var i=0; i<o.length; i++) {
+            newObjs.push(o[i].parentNode);
+        }
+        setO(newObjs);
+        return this;
+    };
+
+    // Setting current object to next siblings of all objects.
+    var next = function() {
+        var newObjs = [];
+        for (var i=0; i<o.length; i++) {
+            newObjs.push(o[i].nextElementSibling);
+        }
+        setO(newObjs);
+        return this;
+    };
+
+    // Getting/setting HTML.
+    var html = function(v) {
+        if (typeof v === 'undefined') {
+            var out=[];
+            for (var i=0; i<o.length; i++) {
+                out.push(o[i].innerHTML);
+            }
+            return _returnArray(out);
+        } else {
+            for (var i=0; i<o.length; i++) {
+                o[i].innerHTML=v;
+            }
+            return this;
+        }
+    };
+
 
     var setCheckedIfValueMatches = function(v, c) {
         for (var i=0; i<o.length; i++) {
@@ -176,13 +224,7 @@ var j_ = (function() {
                     out.push(_getElementChecked(o[i]));
                 }
             }
-            if (out.length==1) {
-                return out[0];
-            } else if (out.length==0) {
-                return null;
-            } else {
-                return out;
-            }
+            return _returnArray(out);
         } else {
             for (var i=0; i<o.length; i++) {
                 if (_canElementBeChecked(o[i])) {
@@ -196,20 +238,10 @@ var j_ = (function() {
     var disabled = function(v) {
         if (typeof v === 'undefined') {
             var out=[];
-            for (var i=0; i<o.length; i++) {
-                out.push(_getElementDisabled(o[i]));
-            }
-            if (out.length==1) {
-                return out[0];
-            } else if (out.length==0) {
-                return null;
-            } else {
-                return out;
-            }
+            for (var i=0; i<o.length; i++) { out.push(_getElementDisabled(o[i]));      }
+            return _returnArray(out);
         } else {
-            for (var i=0; i<o.length; i++) {
-                _setElementDisabled(o[i],(v?true:false));
-            }
+            for (var i=0; i<o.length; i++) { _setElementDisabled(o[i],(v?true:false)); }
             return this;
         }
     };
@@ -217,20 +249,10 @@ var j_ = (function() {
     var attribute = function(a, v) {
         if (typeof v === 'undefined') {
             var out=[];
-            for (var i=0; i<o.length; i++) {
-                out.push(_getElementAttribute(o[i], a));
-            }
-            if (out.length==1) {
-                return out[0];
-            } else if (out.length==0) {
-                return null;
-            } else {
-                return out;
-            }
+            for (var i=0; i<o.length; i++) { out.push(_getElementAttribute(o[i], a)); }
+            return _returnArray(out);
         } else {
-            for (var i=0; i<o.length; i++) {
-                _setElementAttribute(o[i], a, v);
-            }
+            for (var i=0; i<o.length; i++) { _setElementAttribute(o[i], a, v);        }
             return this;
         }
     };
@@ -238,75 +260,12 @@ var j_ = (function() {
     var style = function(a, v) {
         if (typeof v === 'undefined') {
             var out=[];
-            for (var i=0; i<o.length; i++) {
-                out.push(_getElementStyle(o[i], a));
-            }
-            if (out.length==1) {
-                return out[0];
-            } else if (out.length==0) {
-                return null;
-            } else {
-                return out;
-            }
+            for (var i=0; i<o.length; i++) { out.push(_getElementStyle(o[i], a));     }
+            return _returnArray(out);
         } else {
-            for (var i=0; i<o.length; i++) {
-                _setElementStyle(o[i], a, v);
-            }
+            for (var i=0; i<o.length; i++) { _setElementStyle(o[i], a, v);            }
             return this;
         }
-    };
-
-    var html = function(v) {
-        if (typeof v === 'undefined') {
-            var out=[];
-            for (var i=0; i<o.length; i++) {
-                out.push(o[i].innerHTML);
-            }
-            if (out.length==1) {
-                return out[0];
-            } else if (out.length==0) {
-                return null;
-            } else {
-                return out;
-            }
-        } else {
-            for (var i=0; i<o.length; i++) {
-                o[i].innerHTML=v;
-            }
-            return this;
-        }
-    };
-
-    var remove = function() {
-        for (var i=0; i<o.length; i++) {
-            o[i].parentNode.removeChild(o[i]);
-        }
-    };
-
-    var parent = function() {
-        var newObjs = [];
-        for (var i=0; i<o.length; i++) {
-            newObjs.push(o[i].parentNode);
-        }
-        this.setObjs(newObjs);
-        return this;
-    };
-
-    var next = function() {
-        var newObjs = [];
-        for (var i=0; i<o.length; i++) {
-            newObjs.push(o[i].nextElementSibling);
-        }
-        this.setObjs(newObjs);
-        return this;
-    };
-
-    // Events.
-    var on = function(n, f) {
-        for (var i=0; i<o.length; i++) {
-            o[i].addEventListener(n, f);
-        }
-        return this;
     };
 
     // Getting/setting value.
@@ -425,19 +384,21 @@ var j_ = (function() {
 
 
     // Counter for uniquely generated ids.
-    var genIdsCnt = 0;
+    var genUidsCnt = 0;
 
-    // Getting the object and alternatively logging an error.
-    var obj = function(id, errMsg) {
-        var o = document.getElementById(id);
-        if (o === null) {
-            console.log(errMsg);
+    // Getting raw js object by id.
+    var getRawObject = function(id) {
+        if (typeof(id) === 'string') {
+            var o = document.getElementById(id);
+            return o;
+        } else if (typeof(id) == 'undefined') {
+            return _returnArray(getO());
         }
-        return o;
+        return null;
     };
 
     // To be used only in sensible places, eg. when object is created once for a lifetime.
-    var newObj = function(type, properties) {
+    var newObject = function(type, properties) {
         var o = document.createElement(type);
         if (typeof(properties) == 'object') {
             for (p in properties) {
@@ -453,42 +414,25 @@ var j_ = (function() {
         return o;
     };
 
-    // Appending one object to another. Just a wrapper to appendChild.
-    var appendObj = function(obj, tgt) {
-        tgt.appendChild(obj);
-    };
-
-    // Encoding and decoding '<' and '>' HTML chars.
-    var encHtml = function(s) {
-        return s.replace('<', '&lt;').replace('>', '&gt');
-    };
-    var decHtml = function(s) {
-        return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>');
-    };
-
-    // Generates unique id dependant on current datetime and genIdsCnt counter.
-    var genId = function() {
-        var curDate = new Date();
-        var curUnixTime = parseInt(curDate.getTime() / 1000);
-        curUnixTime = curUnixTime.toString();
-        june.genIdsCnt++;
-        return 'gen_'+curUnixTime+'_'+(june.genIdsCnt-1);
-    };
-
-    // Getting object on which we are going do various action (eg. change styles).
-    var get = function (i) {
-        if (typeof(i) == 'object') {
-            setObjs([i]);
-        } else {
-            if (document.getElementById(i)) {
-                setObjs([document.getElementById(i)]);
-            }
+    // Appending object, just a wrapper to appendChild.
+    var append = function(obj) {
+        if (o.length == 1) {
+            o[0].appendChild(obj);
         }
         return this;
     };
 
+    // Generates unique id dependant on current datetime and genUidsCnt counter.
+    var genUid = function() {
+        var curDate = new Date();
+        var curUnixTime = parseInt(curDate.getTime() / 1000);
+        curUnixTime = curUnixTime.toString();
+        genUidsCnt++;
+        return 'gen_'+curUnixTime+'_'+(genUidsCnt-1);
+    };
+
     // Run function on document load.
-    var onDocLoad = function(f) {
+    var onDocumentLoad = function(f) {
         var r = setInterval(function() {
             if (document.readyState == 'complete') {
                 clearInterval(r);
@@ -497,34 +441,63 @@ var j_ = (function() {
         }, 10);
     };
 
-    return {
-        get                         : get,
+    // Encoding and decoding '<' and '>' HTML chars.
+    var encodeHtml = function(s) { return s.replace('<',    '&lt;').replace('>',     '&gt'); };
+    var decodeHtml = function(s) { return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>'); };
 
-        remClass                    : remClass,
-        addClass                    : addClass,
-        coords                      : coords,
-        val                         : val,
+
+    return {
+        // @todo To be renamed or re-factored.
         setCheckedIfValueMatches    : setCheckedIfValueMatches,
         setCheckedIfValuesMatches   : setCheckedIfValuesMatches,
         getValueIfChecked           : getValueIfChecked,
         getValuesIfChecked          : getValuesIfChecked,
-        checked                     : checked,
-        disabled                    : disabled,
-        attribute                   : attribute,
-        style                       : style,
-        html                        : html,
-        remove                      : remove,
+        
+        // Methods that require associated object
+        on                          : on,
+        removeClass                 : removeClass,
+        addClass                    : addClass,
+        position                    : position,
+        value                       : value,
         parent                      : parent,
         next                        : next,
-        on                          : on,
-        
-        genId                       : genId,
-        encHtml                     : encHtml,
-        decHtml                     : decHtml,
-        appendObj                   : appendObj,
-        newObj                      : newObj,
-        obj                         : obj,
-        onDocLoad                   : onDocLoad
+        remove                      : remove,
+        html                        : html,
+        append                      : append,
+        attribute                   : attribute,
+        checked                     : checked,
+        disabled                    : disabled,
+        style                       : style,
+
+        // Methods that do not require object
+        onDocumentLoad              : onDocumentLoad,
+        get                         : get,
+        genUid                      : genUid,
+        getRawObject                : getRawObject,
+        encodeHtml                  : encodeHtml,
+        decodeHtml                  : decodeHtml,
+        newObject                   : newObject,
+
+        // Short aliases
+        odl                         : onDocumentLoad,
+        g                           : get,
+        uid                         : genUid,
+        rcls                        : removeClass,
+        acls                        : addClass,
+        pos                         : position,
+        val                         : value,
+        par                         : parent,
+        next                        : next,
+        obj                         : getRawObject,
+        rm                          : remove,
+        enc                         : encodeHtml,
+        dec                         : decodeHtml,
+        nu                          : newObject,
+        app                         : append,
+        attr                        : attribute,
+        chk                         : checked,
+        dis                         : disabled,
+        sty                         : style
     };
 })();
 

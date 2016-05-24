@@ -1,0 +1,55 @@
+<html>
+<head>
+</head>
+<body>
+    <div id="div1" class="class1 class2 class3">
+        <input type="text" id="input1" value="Value1"/>
+        <input type="checkbox" id="input2" value="1"/>
+    </div>
+    <div id="div2"><b>I should be removed</b></div>
+    <div id="div3"><i>And I should be removed.</i></div>
+    <div id="div4">I should be replaced with another HTML.</div>
+    <script src="/../src/laatu-june.js" type="text/javascript"></script>
+    <script>
+        june.onDocumentLoad(function() {
+            console.log('Document loaded.');
+            console.log(june.get('input1'));
+            console.log(june.g('input1'));
+            june.g('input1').on('focus', function() { console.log('Focus on the input.'); }).on('blur', function() { console.log('Focus not on the input anymore.'); });
+            console.log(june.genUid());
+            console.log(june.uid());
+            june.g('div1').removeClass('class1').rcls('class2').rcls('class2');
+            june.g('div1').addClass('class4').acls('class5').acls('class5');
+            console.log(june.g('input1').position());
+            console.log(june.g('input1').pos());
+            console.log(june.g('input1').parent().acls('added-class-to-div'));
+            console.log(june.g('input1').parent().par().acls('added-class-to-document'));
+            console.log(june.g('div3').next().html());
+            console.log(june.obj('input1'));
+            console.log(june.g('input1').obj());
+            june.g('div2').remove();
+            june.g('div3').rm();
+            console.log(june.g('div4').html());
+            console.log(june.g('div4').html('Replace by function'));
+            console.log(june.encodeHtml('<a>'));
+            console.log(june.enc('<a>'));
+            console.log(june.decodeHtml('&lt;a&gt;'));
+            console.log(june.dec('&lt;a&gt;'));
+            console.log(june.nu('div'));
+            var d=june.nu('div'); june.g(d).html('Appended object.'); june.g('div4').append(d);
+            console.log(june.g('input1').attr('id'));
+            console.log(june.g('input1').attr('new-attribute', 'new-attr-val'));
+            june.g('input2').checked(true);
+            console.log(june.g('input2').checked());
+            june.g('input2').chk(false);
+            console.log(june.g('input2').chk());
+            june.g('input2').disabled(true);
+            console.log(june.g('input2').disabled());
+            june.g('input2').dis(false);
+            console.log(june.g('input2').disabled());
+            june.g('input1').style('color', '#ff0000');
+            console.log(june.g('input1').style('color'));
+            june.g('div1').sty('marginTop', '200px').sty('border', 'solid 1px #00ff00');
+        });
+    </script>
+</body>
