@@ -58,10 +58,18 @@ var june = (function() {
     var position = function() {
         var out=[];
         for (var i=0; i<o.length; i++) {
-            var _height = "innerHeight" in o[i] ? o[i].innerHeight : o[i].offsetHeight;
-            var _width  = "innerWidth"  in o[i] ? o[i].innerWidth  : o[i].offsetWidth;
-            var _left   = o[i].offsetLeft;
-            var _top    = o[i].offsetTop;
+            if (o[i].tagName == 'svg') {
+                var bbox    = o[i].getBBox();
+                var _height = bbox.height;
+                var _width  = bbox.width;
+                var _left   = bbox.x;
+                var _top    = bbox.y;
+            } else {
+                var _height = "innerHeight" in o[i] ? o[i].innerHeight : o[i].offsetHeight;
+                var _width  = "innerWidth"  in o[i] ? o[i].innerWidth  : o[i].offsetWidth;
+                var _left   = o[i].offsetLeft;
+                var _top    = o[i].offsetTop;
+            }
             out.push({ w: _width, h: _height, l: _left, t: _top });
         }
         return _returnArray(out);
