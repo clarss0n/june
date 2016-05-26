@@ -9,7 +9,7 @@
     <div id="div2"><b>I should be removed</b></div>
     <div id="div3"><i>And I should be removed.</i></div>
     <div id="div4">I should be replaced with another HTML.</div>
-    <script src="/../src/laatu-june.js" type="text/javascript"></script>
+    <script src="../src/laatu-june.js" type="text/javascript"></script>
     <script>
         june.onDocumentLoad(function() {
             console.log('Document loaded.');
@@ -51,6 +51,8 @@
             june.g('input1').style('color', '#ff0000');
             console.log(june.g('input1').style('color'));
             june.g('div1').sty('marginTop', '200px').sty('border', 'solid 1px #00ff00');
+            console.log(june.encUri('A sample text.'));
+            console.log(june.decUri('A%20sample%20text.'));
         });
     </script>
 </body>

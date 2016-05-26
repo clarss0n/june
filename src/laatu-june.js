@@ -373,6 +373,9 @@ var june = (function() {
     var encodeHtml = function(s) { return s.replace('<',    '&lt;').replace('>',     '&gt'); };
     var decodeHtml = function(s) { return s.replace(/\&lt\;/g, '<').replace(/\&gt\;/g, '>'); };
 
+    // Just a nice alias to encodeURIComponent.
+    var encodeUri  = function(s) { return encodeURIComponent(s); }
+    var decodeUri  = function(s) { return decodeURIComponent(s); }
 
     return {
         // @todo To be renamed or re-factored.
@@ -427,7 +430,9 @@ var june = (function() {
         attr                        : attribute,
         chk                         : checked,
         dis                         : disabled,
-        sty                         : style
+        sty                         : style,
+	encUri                      : encodeUri,
+	decUri                      : decodeUri
     };
 })();
 
