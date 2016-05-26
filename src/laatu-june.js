@@ -91,10 +91,18 @@ var june = (function() {
         return this;
     };
 
-    // Setting current object to next siblings of all objects.
+    // Setting current objects to its next siblings.
     var next = function() {
         var newObjs = [];
         for (var i=0; i<o.length; i++) { newObjs.push(o[i].nextElementSibling); }
+        setO(newObjs);
+        return this;
+    };
+
+    // Setting current objects to its previous siblings.
+    var previous = function() {
+        var newObjs = [];
+        for (var i=0; i<o.length; i++) { newObjs.push(o[i].previousElementSibling); }
         setO(newObjs);
         return this;
     };
@@ -381,6 +389,7 @@ var june = (function() {
         value                       : value,
         parent                      : parent,
         next                        : next,
+        previous                    : previous,
         remove                      : remove,
         html                        : html,
         append                      : append,
@@ -408,6 +417,7 @@ var june = (function() {
         val                         : value,
         par                         : parent,
         next                        : next,
+        prev                        : previous,
         obj                         : getRawObject,
         rm                          : remove,
         enc                         : encodeHtml,
